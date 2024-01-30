@@ -41,8 +41,8 @@ fun LoadingScreen() {
 fun EmptyListContent(textResourceId: Int, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.onPrimary),
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = stringResource(id = textResourceId),

@@ -9,5 +9,7 @@
 
     <!-- region repository details -->
         <string name="repository_details_tag_blank_screen">Currently there is no tag in this repository available.</string>
+        <string name="repository_details_tag_title">Tag: %s</string>
+        <string name="repository_details_commit_sha_title">Commit SHA: %s</string>
     <!-- end region repository details -->
 </resources>

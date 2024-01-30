@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -22,11 +24,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import coil.compose.AsyncImage
+import com.example.dimigithubapp.R
+import com.example.dimigithubapp.compose.general.EmptyListContent
 import com.example.dimigithubapp.compose.general.LoadingScreen
+import com.example.dimigithubapp.compose.general.UnknownErrorScreen
 import com.example.dimigithubapp.model.RepositoryDetailUiState
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
@@ -45,10 +52,10 @@ fun RepositoryDetailScreen(entry: NavBackStackEntry) {
         is RepositoryDetailUiState.Loading -> LoadingScreen()
         is RepositoryDetailUiState.Complete -> RepositoryDetailContent(
             uiState = uiState as RepositoryDetailUiState.Complete,
-            tagUiState = tagUiState as RepositoryDetailUiState.Tag.Complete,
+            tagUiState = tagUiState,
         )
 
-        is RepositoryDetailUiState.Error -> return
+        is RepositoryDetailUiState.Error -> UnknownErrorScreen()
         else -> return
     }
 }
@@ -56,10 +63,11 @@ fun RepositoryDetailScreen(entry: NavBackStackEntry) {
 @Composable
 fun RepositoryDetailContent(
     uiState: RepositoryDetailUiState.Complete,
-    tagUiState: RepositoryDetailUiState.Tag.Complete,
+    tagUiState: RepositoryDetailUiState.Tag,
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         state = rememberLazyListState()
@@ -68,10 +76,19 @@ fun RepositoryDetailContent(
             RepositoryHeader(uiState = uiState)
         }
 
-        items(tagUiState.tags.count()) { index ->
-            TagItem(tagName = tagUiState.tags[index].name, commitSha = tagUiState.tags[index].sha)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        if (tagUiState is RepositoryDetailUiState.Tag.Complete)
+            items(tagUiState.tags.count()) { index ->
+                TagItem(
+                    tagName = tagUiState.tags[index].name,
+                    commitSha = tagUiState.tags[index].sha,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+    }
+    when (tagUiState) {
+        is RepositoryDetailUiState.Tag.EmptyList -> EmptyListContent(R.string.repository_details_tag_blank_screen)
+        is RepositoryDetailUiState.Tag.Loading -> LoadingScreen()
+        else -> return
     }
 }
 
@@ -81,29 +98,46 @@ fun RepositoryHeader(uiState: RepositoryDetailUiState.Complete) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        uiState.uiModel.userName?.let { Text(text = it, modifier = Modifier.padding(start = 8.dp)) }
-
-        Text(
-            text = uiState.uiModel.repositoryName,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp)
+        AsyncImage(
+            model = uiState.uiModel.avatarUrl,
+            contentDescription = null,
+            modifier = Modifier
+                .size(60.dp)
+                .clip(MaterialTheme.shapes.medium),
         )
 
-        AsyncImage(model = uiState.uiModel.avatarUrl, contentDescription = null)
-
-        Row(
+        Column(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+                .fillMaxWidth()
         ) {
-            Icon(imageVector = Icons.Default.Person, contentDescription = null)
-            Text(text = uiState.uiModel.forksCount, modifier = Modifier.padding(start = 4.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(imageVector = Icons.Default.Star, contentDescription = null)
-            Text(text = uiState.uiModel.watchersCount, modifier = Modifier.padding(start = 4.dp))
+            Text(
+                text = uiState.uiModel.repositoryName,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 4.dp),
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Icon(imageVector = Icons.Default.Star, contentDescription = null)
+                Text(
+                    text = uiState.uiModel.forksCount,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 4.dp),
+                )
+                Icon(imageVector = Icons.Default.Person, contentDescription = null)
+                Text(
+                    text = uiState.uiModel.watchersCount,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 4.dp),
+                )
+            }
         }
     }
 }
@@ -111,8 +145,14 @@ fun RepositoryHeader(uiState: RepositoryDetailUiState.Complete) {
 @Composable
 fun TagItem(tagName: String, commitSha: String) {
     Column {
-        Text(text = "Tag: $tagName", style = MaterialTheme.typography.bodyLarge)
-        Text(text = "Commit SHA: $commitSha", style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = stringResource(id = R.string.repository_details_tag_title, tagName),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Text(
+            text = stringResource(id = R.string.repository_details_commit_sha_title, commitSha),
+            style = MaterialTheme.typography.titleMedium
+        )
     }
 }
 
