@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">DimiGithubApp</string>
+    <!-- region repository -->
+        <string name="repository_id">Repository id: %s</string>
+        <string name="repository_name">Repository name: %s</string>
+        <string name="repository_open_issues">Open issues: %s</string>
+        <string name="repository_blank_screen">Currently there is no user repositories available.</string>
+    <!-- end region repository -->
+
+    <!-- region repository details -->
+
+    <!-- end region repository details -->
+</resources>

@@ -1,0 +1,16 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply from: "$rootDir/generalDependencies.gradle"
+
+apply from: "$rootDir/generalDependencies.gradle"
+
+android {
+    namespace "com.example.dimigithubapp.domain"
+    compileSdk 33
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation koinDependencies.values()
+}

@@ -1,0 +1,7 @@
+ext {
+    def koinVersion = "3.5.0"
+
+    koinDependencies = [
+            "koin" : "io.insert-koin:koin-android:$koinVersion"
+    ]
+}

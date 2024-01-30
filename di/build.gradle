@@ -1,0 +1,14 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply from: "$rootDir/generalDependencies.gradle"
+
+android {
+    namespace "com.example.dimigithubapp.data"
+    compileSdk 33
+
+}
+
+dependencies {
+    implementation project(':data')
+    implementation koinDependencies.values()
+}
