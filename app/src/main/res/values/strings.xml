@@ -12,4 +12,11 @@
         <string name="repository_details_tag_title">Tag: %s</string>
         <string name="repository_details_commit_sha_title">Commit SHA: %s</string>
     <!-- end region repository details -->
+
+    <!-- region general error -->
+        <string name="connection_error">"Sorry, please turn on your internet."</string>
+        <string name="unknown_error">Sorry, there was unexpected error, please try later.</string>
+    <!-- end region general error -->
+
+    <string name="retry_button">Retry</string>
 </resources>

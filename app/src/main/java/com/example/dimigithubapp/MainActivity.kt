@@ -32,11 +32,17 @@ class MainActivity : ComponentActivity() {
                     startDestination = "UserRepositories"
                 ) {
                     composable("UserRepositories") {
-                        UserRepositoriesScreen(navController = navController, uiState = uiState)
+                        UserRepositoriesScreen(
+                            navController = navController,
+                            onRetryClick = { viewModel.getUserRepositories() },
+                            uiState = uiState,
+                        )
                     }
                     composable(
                         route = "RepositoryDetailScreen/{repositoryName}",
-                        arguments = listOf(navArgument("repositoryName") { type = NavType.StringType })
+                        arguments = listOf(navArgument("repositoryName") {
+                            type = NavType.StringType
+                        })
                     ) {
                         RepositoryDetailScreen(it)
                     }

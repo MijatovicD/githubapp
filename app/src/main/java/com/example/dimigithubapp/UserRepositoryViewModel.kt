@@ -30,7 +30,7 @@ class UserRepositoryViewModel(
         getUserRepositories()
     }
 
-    private fun getUserRepositories() {
+    fun getUserRepositories() {
         viewModelScope.launch {
             userRepositoryUseCase.runCatching {
                 execute()

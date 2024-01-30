@@ -26,7 +26,11 @@ import com.example.dimigithubapp.model.UserRepositoryUiModel
 import com.example.dimigithubapp.model.UserRepositoryUiState
 
 @Composable
-fun UserRepositoriesScreen(navController: NavController, uiState: UserRepositoryUiState) {
+fun UserRepositoriesScreen(
+    navController: NavController,
+    onRetryClick: () -> Unit,
+    uiState: UserRepositoryUiState,
+) {
     when (uiState) {
         UserRepositoryUiState.Loading -> LoadingScreen()
         UserRepositoryUiState.EmptyList -> EmptyListContent(textResourceId = R.string.repository_blank_screen)
@@ -35,7 +39,7 @@ fun UserRepositoriesScreen(navController: NavController, uiState: UserRepository
             onRepositoryClicked = { navController.navigate("RepositoryDetailScreen/$it") },
         )
 
-        is UserRepositoryUiState.Error -> ErrorScreen(uiState = uiState)
+        is UserRepositoryUiState.Error -> ErrorScreen(uiState = uiState, onRetryClick)
     }
 }
 
