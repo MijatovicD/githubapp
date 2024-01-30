@@ -1,6 +1,6 @@
 package com.example.dimigithubapp.di
 
-import com.example.dimigithubapp.UserRepositoryViewModel
+import com.example.dimigithubapp.userrepository.UserRepositoryViewModel
 import com.example.dimigithubapp.reporistorydetail.RepositoryDetailViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

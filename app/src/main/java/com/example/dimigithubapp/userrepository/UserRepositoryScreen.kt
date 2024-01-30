@@ -1,4 +1,4 @@
-package com.example.dimigithubapp
+package com.example.dimigithubapp.userrepository
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.dimigithubapp.R
 import com.example.dimigithubapp.compose.general.EmptyListContent
 import com.example.dimigithubapp.compose.general.ErrorScreen
 import com.example.dimigithubapp.compose.general.LoadingScreen

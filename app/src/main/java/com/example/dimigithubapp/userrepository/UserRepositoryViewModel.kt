@@ -1,4 +1,4 @@
-package com.example.dimigithubapp
+package com.example.dimigithubapp.userrepository
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

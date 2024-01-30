@@ -12,6 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.dimigithubapp.reporistorydetail.RepositoryDetailScreen
+import com.example.dimigithubapp.userrepository.UserRepositoriesScreen
+import com.example.dimigithubapp.userrepository.UserRepositoryViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
