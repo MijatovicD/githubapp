@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import coil.compose.AsyncImage
@@ -32,6 +33,7 @@ import com.example.dimigithubapp.R
 import com.example.dimigithubapp.compose.general.EmptyListContent
 import com.example.dimigithubapp.compose.general.LoadingScreen
 import com.example.dimigithubapp.compose.general.UnknownErrorScreen
+import com.example.dimigithubapp.compose.general.RepositoryDetailPreviewParameter
 import com.example.dimigithubapp.model.RepositoryDetailUiState
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
@@ -151,6 +153,16 @@ fun TagItem(tagName: String, commitSha: String) {
             text = stringResource(id = R.string.repository_details_commit_sha_title, commitSha),
             style = MaterialTheme.typography.titleMedium
         )
+    }
+}
+
+@Preview
+@Composable
+private fun RepositoryDetailHeaderPreview(
+    @PreviewParameter(RepositoryDetailPreviewParameter::class) repositoryDetailCompleteState: RepositoryDetailUiState.Complete,
+) {
+    MaterialTheme {
+        RepositoryHeader(uiState = repositoryDetailCompleteState)
     }
 }
 
