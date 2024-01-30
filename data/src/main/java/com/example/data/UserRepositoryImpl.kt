@@ -22,7 +22,7 @@ class UserRepositoryImpl(
         userRepositoryService.runCatching {
             getUserRepository()
         }.mapCatching {
-            requireNotNull(it.body())
+            requireNotNull(it.body()) { "UserRepositoryResponseBody is null" }
         }.mapCatching {
             userRepositoryResponseBodyToUserRepositoryMapper.map(it)
         }.getOrThrowError(throwableToErrorMapper)
@@ -31,7 +31,7 @@ class UserRepositoryImpl(
         userRepositoryService.runCatching {
             getRepositoryDetail(repositoryName)
         }.mapCatching {
-            requireNotNull(it.body())
+            requireNotNull(it.body()) { "RepositoryDetailResponseBody is null" }
         }.mapCatching {
             repositoryDetailMapper.map(it)
         }.getOrThrowError(throwableToErrorMapper)
@@ -40,7 +40,7 @@ class UserRepositoryImpl(
         userRepositoryService.runCatching {
             getRepositoryTags(repositoryName)
         }.mapCatching {
-            requireNotNull(it.body())
+            requireNotNull(it.body()) { "RepositoryTagResponseBody is null" }
         }.mapCatching {
             repositoryTagModelMapper.map(it)
         }.getOrThrowError(throwableToErrorMapper)

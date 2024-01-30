@@ -40,10 +40,15 @@ fun UserRepositoriesScreen(
         UserRepositoryUiState.EmptyList -> EmptyListContent(textResourceId = R.string.repository_blank_screen)
         is UserRepositoryUiState.Complete -> ListContent(
             repositories = uiState.uiModel,
-            onRepositoryClicked = { navController.navigate("RepositoryDetailScreen/$it") },
+            onRepositoryClicked = { repositoryName ->
+                navController.navigate("RepositoryDetailScreen/$repositoryName")
+            },
         )
 
-        is UserRepositoryUiState.Error -> ErrorScreen(uiState = uiState, onRetryClick)
+        is UserRepositoryUiState.Error -> ErrorScreen(
+            uiState = uiState,
+            onRetryClick = onRetryClick,
+        )
     }
 }
 
@@ -55,13 +60,17 @@ private fun ListContent(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = { TopBar(title = "User repositories", showBackButton = false) },
+        topBar = {
+            TopBar(
+                title = stringResource(id = R.string.topbar_main),
+            )
+        },
         modifier = Modifier.fillMaxSize()
-    ) {
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(paddingValues)
                 .background(color = MaterialTheme.colorScheme.onPrimary),
         ) {
             items(repositories) { uiModel ->

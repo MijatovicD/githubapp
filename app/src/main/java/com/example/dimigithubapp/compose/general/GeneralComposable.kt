@@ -36,7 +36,7 @@ import com.example.dimigithubapp.model.UserRepositoryUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String, showBackButton: Boolean = true, onBackClick: () -> Unit = {}) {
+fun TopBar(title: String, showBackButton: Boolean = false, onBackClick: () -> Unit = {}) {
     TopAppBar(
         modifier = Modifier.background(Color.Gray),
         title = {
@@ -49,10 +49,10 @@ fun TopBar(title: String, showBackButton: Boolean = true, onBackClick: () -> Uni
             if (showBackButton)
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        Icons.Default.ArrowBack,
+                        imageVector = Icons.Default.ArrowBack,
                         contentDescription = null,
                     )
-                }
+            }
         },
     )
 }
@@ -69,7 +69,7 @@ fun LoadingScreen() {
             color = Color.Gray,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(4.dp)
+                .height(4.dp),
         )
     }
 }

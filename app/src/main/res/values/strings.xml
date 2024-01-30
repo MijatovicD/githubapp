@@ -18,5 +18,10 @@
         <string name="unknown_error">Sorry, there was unexpected error, please try later.</string>
     <!-- end region general error -->
 
+    <!-- region top bar -->
+        <string name="topbar_main">User repositories</string>
+        <string name="topbar_repository_detail">Repository detail for %s</string>
+    <!-- end region top bar -->
+
     <string name="retry_button">Retry</string>
 </resources>

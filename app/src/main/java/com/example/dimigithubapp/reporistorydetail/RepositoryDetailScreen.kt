@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -43,13 +47,13 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RepositoryDetailScreen(entry: NavBackStackEntry, onBackClick: () -> Unit) {
-    val argument = entry.arguments?.getString("repositoryName")
+    val argument: String? = entry.arguments?.getString("repositoryName")
     val viewModel: RepositoryDetailViewModel = getViewModel {
         parametersOf(argument)
     }
-    val uiState by viewModel.repositoryDetailUiStateFlow.collectAsState()
+    val uiState: RepositoryDetailUiState by viewModel.repositoryDetailUiStateFlow.collectAsState()
 
-    val tagUiState by viewModel.repositoryTagUiStateFlow.collectAsState()
+    val tagUiState: RepositoryDetailUiState.Tag by viewModel.repositoryTagUiStateFlow.collectAsState()
 
     when (uiState) {
         is RepositoryDetailUiState.Loading -> LoadingScreen()
@@ -73,24 +77,31 @@ fun RepositoryDetailContent(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = { TopBar(title = "Details of ${uiState.uiModel.repositoryName} repository", onBackClick = onBackClick) },
-        modifier = Modifier.fillMaxSize()
-    ) {
+        topBar = {
+            TopBar(
+                title = stringResource(
+                    id = R.string.topbar_repository_detail,
+                    uiState.uiModel.repositoryName
+                ),
+                showBackButton = true,
+                onBackClick = onBackClick,
+            )
+        },
+        modifier = modifier.fillMaxSize(),
+    ) { paddingValues ->
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(it),
-            state = rememberLazyListState()
+                .padding(paddingValues),
+            state = rememberLazyListState(),
         ) {
-            item {
-                RepositoryHeader(uiState = uiState)
-            }
+            item { RepositoryHeader(uiState = uiState) }
 
             if (tagUiState is RepositoryDetailUiState.Tag.Complete)
-                items(tagUiState.tags.count()) { index ->
+                itemsIndexed(tagUiState.tags) { _, tag ->
                     TagItem(
-                        tagName = tagUiState.tags[index].name,
-                        commitSha = tagUiState.tags[index].sha,
+                        tagName = tag.name,
+                        commitSha = tag.sha,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -105,9 +116,9 @@ fun RepositoryDetailContent(
 }
 
 @Composable
-fun RepositoryHeader(uiState: RepositoryDetailUiState.Complete) {
+fun RepositoryHeader(uiState: RepositoryDetailUiState.Complete, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -156,16 +167,28 @@ fun RepositoryHeader(uiState: RepositoryDetailUiState.Complete) {
 
 @Composable
 fun TagItem(tagName: String, commitSha: String) {
-    Column {
-        Text(
-            text = stringResource(id = R.string.repository_details_tag_title, tagName),
-            style = MaterialTheme.typography.bodyLarge,
-        )
-        Text(
-            text = stringResource(id = R.string.repository_details_commit_sha_title, commitSha),
-            style = MaterialTheme.typography.titleMedium
-        )
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.repository_details_tag_title, tagName),
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+            )
+            Text(
+                text = stringResource(id = R.string.repository_details_commit_sha_title, commitSha),
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.Black,
+            )
+        }
     }
+
 }
 
 @Preview
