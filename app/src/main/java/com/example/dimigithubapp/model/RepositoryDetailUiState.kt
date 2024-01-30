@@ -12,6 +12,8 @@ sealed class RepositoryDetailUiState {
 
         data object Loading : Tag()
 
+        data object EmptyList : Tag()
+
         data class Complete(val tags: List<RepositoryTagUiModel>) : Tag()
 
         data object Error : Tag()

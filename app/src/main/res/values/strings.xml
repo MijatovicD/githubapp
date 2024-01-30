@@ -8,6 +8,6 @@
     <!-- end region repository -->
 
     <!-- region repository details -->
-
+        <string name="repository_details_tag_blank_screen">Currently there is no tag in this repository available.</string>
     <!-- end region repository details -->
 </resources>

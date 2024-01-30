@@ -60,8 +60,9 @@ class RepositoryDetailViewModel(
         viewModelScope.launch {
             getRepositoryTagUseCase.runCatching {
                 execute(repositoryName)
-            }.mapCatching {
-                RepositoryDetailUiState.Tag.Complete(it.toUiModel())
+            }.mapCatching { tagList ->
+                if (tagList.isEmpty()) RepositoryDetailUiState.Tag.EmptyList
+                else RepositoryDetailUiState.Tag.Complete(tagList.toUiModel())
             }.getOrElse {
                 RepositoryDetailUiState.Tag.Error
             }.also { uiState ->

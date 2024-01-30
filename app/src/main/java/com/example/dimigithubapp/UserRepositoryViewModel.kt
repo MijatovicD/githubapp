@@ -7,7 +7,6 @@ import com.example.dimigithubapp.mapper.ThrowableToUserRepositoryErrorUiStateMap
 import com.example.dimigithubapp.mapper.UserRepositoryToUserRepositoryUiModelMapper
 import com.example.dimigithubapp.model.UserRepositoryUiModel
 import com.example.dimigithubapp.model.UserRepositoryUiState
-import com.example.domain.model.Error
 import com.example.domain.model.UserRepositoryModel
 import com.example.domain.usecase.GetUserRepositoryNonParameterUseCase
 import kotlinx.coroutines.flow.MutableStateFlow

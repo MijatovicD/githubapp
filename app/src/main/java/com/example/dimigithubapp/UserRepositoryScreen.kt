@@ -2,7 +2,6 @@ package com.example.dimigithubapp
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,11 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.dimigithubapp.compose.general.EmptyListContent
 import com.example.dimigithubapp.compose.general.ErrorScreen
 import com.example.dimigithubapp.compose.general.LoadingScreen
 import com.example.dimigithubapp.compose.general.UserRepositoryPreviewParameter
@@ -30,27 +29,13 @@ import com.example.dimigithubapp.model.UserRepositoryUiState
 fun UserRepositoriesScreen(navController: NavController, uiState: UserRepositoryUiState) {
     when (uiState) {
         UserRepositoryUiState.Loading -> LoadingScreen()
-        UserRepositoryUiState.EmptyList -> EmptyListContent()
+        UserRepositoryUiState.EmptyList -> EmptyListContent(textResourceId = R.string.repository_blank_screen)
         is UserRepositoryUiState.Complete -> ListContent(
             repositories = uiState.uiModel,
             onRepositoryClicked = { navController.navigate("RepositoryDetailScreen/$it") },
         )
-        is UserRepositoryUiState.Error -> ErrorScreen(uiState = uiState)
-    }
-}
 
-@Composable
-private fun EmptyListContent(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.onPrimary),
-    ) {
-        Text(
-            text = stringResource(id = R.string.repository_blank_screen),
-            modifier = Modifier.padding(16.dp),
-            textAlign = TextAlign.Center,
-        )
+        is UserRepositoryUiState.Error -> ErrorScreen(uiState = uiState)
     }
 }
 
@@ -110,15 +95,7 @@ private fun UserRepositoryScreenPreview(
     MaterialTheme {
         ListContent(
             repositories = userRepositoryUiModel,
-            onRepositoryClicked = {}
+            onRepositoryClicked = {},
         )
-    }
-}
-
-@Preview
-@Composable
-private fun EmptyListContentPreview() {
-    MaterialTheme {
-        EmptyListContent()
     }
 }

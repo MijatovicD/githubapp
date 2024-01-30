@@ -1,24 +1,16 @@
 package com.example.dimigithubapp.reporistorydetail
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
@@ -30,13 +22,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
+import coil.compose.AsyncImage
 import com.example.dimigithubapp.compose.general.LoadingScreen
 import com.example.dimigithubapp.model.RepositoryDetailUiState
-import com.example.dimigithubapp.model.RepositoryTagUiModel
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -53,8 +44,8 @@ fun RepositoryDetailScreen(entry: NavBackStackEntry) {
     when (uiState) {
         is RepositoryDetailUiState.Loading -> LoadingScreen()
         is RepositoryDetailUiState.Complete -> RepositoryDetailContent(
-            uiState = uiState,
-            tagUiState = tagUiState,
+            uiState = uiState as RepositoryDetailUiState.Complete,
+            tagUiState = tagUiState as RepositoryDetailUiState.Tag.Complete,
         )
 
         is RepositoryDetailUiState.Error -> return
@@ -64,19 +55,23 @@ fun RepositoryDetailScreen(entry: NavBackStackEntry) {
 
 @Composable
 fun RepositoryDetailContent(
-    uiState: RepositoryDetailUiState,
-    tagUiState: RepositoryDetailUiState.Tag,
+    uiState: RepositoryDetailUiState.Complete,
+    tagUiState: RepositoryDetailUiState.Tag.Complete,
 ) {
-    val scrollState = rememberScrollState()
-
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .padding(16.dp),
+        state = rememberLazyListState()
     ) {
-        RepositoryHeader(uiState as RepositoryDetailUiState.Complete)
-        if (tagUiState is RepositoryDetailUiState.Tag.Complete)
-            TagList(tags = tagUiState.tags)
+        item {
+            RepositoryHeader(uiState = uiState)
+        }
+
+        items(tagUiState.tags.count()) { index ->
+            TagItem(tagName = tagUiState.tags[index].name, commitSha = tagUiState.tags[index].sha)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
     }
 }
 
@@ -96,6 +91,8 @@ fun RepositoryHeader(uiState: RepositoryDetailUiState.Complete) {
             modifier = Modifier.padding(start = 16.dp)
         )
 
+        AsyncImage(model = uiState.uiModel.avatarUrl, contentDescription = null)
+
         Row(
             modifier = Modifier
                 .weight(1f)
@@ -112,27 +109,18 @@ fun RepositoryHeader(uiState: RepositoryDetailUiState.Complete) {
 }
 
 @Composable
-fun TagList(tags: List<RepositoryTagUiModel>) {
-    Box(
-        modifier = Modifier
-            .background(color = Color.Gray)
-            .padding(16.dp)
-    ) {
-        LazyColumn(
-            modifier = Modifier
-        ) {
-            items(tags) { tag ->
-                TagItem(tagName = tag.name, commitSha = tag.sha)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
-    }
-}
-
-@Composable
 fun TagItem(tagName: String, commitSha: String) {
     Column {
         Text(text = "Tag: $tagName", style = MaterialTheme.typography.bodyLarge)
         Text(text = "Commit SHA: $commitSha", style = MaterialTheme.typography.titleMedium)
+    }
+}
+
+
+@Preview
+@Composable
+private fun TagItemPreview() {
+    MaterialTheme {
+        TagItem(tagName = "Hello world", commitSha = "fsakdjhfds-afdsf-sadfsdaf-fa")
     }
 }
