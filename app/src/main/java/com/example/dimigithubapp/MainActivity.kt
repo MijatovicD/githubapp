@@ -46,7 +46,10 @@ class MainActivity : ComponentActivity() {
                             type = NavType.StringType
                         })
                     ) {
-                        RepositoryDetailScreen(it)
+                        RepositoryDetailScreen(
+                            entry = it,
+                            onBackClick = { navController.navigateUp() },
+                        )
                     }
                 }
             }
